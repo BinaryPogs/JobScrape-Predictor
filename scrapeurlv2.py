@@ -44,6 +44,7 @@ for i in range(1,19):
             
         
 count = 0
+prev_text = ''
 print("Scraping job information...")
 print_progress_bar(0,len(job_urls))
 with open(filename +'.csv',mode='w', newline='') as job_file:
@@ -58,11 +59,14 @@ with open(filename +'.csv',mode='w', newline='') as job_file:
         for h in heading:
             text = []
             company = h.find('h4', class_='jobsearch-CompanyReview--heading').text.strip('\n')
+            repeat_job = False
             for i in items:
                 tag = i.find_all('ul')
                 for i in tag:
                     text.append(clean_html(str(i)))
-        file_writer.writerow([company,text])
+        if prev_text != text:
+            file_writer.writerow([company,text])
+        prev_text  = text
         print_progress_bar(count+1,len(job_urls))
         count+=1
 
