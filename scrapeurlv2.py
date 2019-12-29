@@ -1,6 +1,9 @@
 import requests
 import re
 import csv
+import pandas as pd
+import os
+from pandas import DataFrame
 from bs4 import BeautifulSoup
 
 base_url = 'https://au.indeed.com/jobs?q=sql&l=Carlingford+NSW'
@@ -8,7 +11,6 @@ indeed_url = 'http://indeed.com'
 job_urls = []
 
 filename = input('Enter output filename:')
-
 def clean_html(raw_html):
     cleaner = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
     cleantext = re.sub(cleaner, '', raw_html)
@@ -29,10 +31,11 @@ def print_progress_bar(iteration, total, prefix="", suffix="", length=30, fill="
         print()
 
 pgno_ext = "&start="
+pages = 19
 print("Scraping job URLs...")
-for i in range(1,19):
+for i in range(1,pages):
     response = requests.get(base_url + pgno_ext + str(10*i))
-    print_progress_bar(i+1,19)
+    print_progress_bar(i+1,pages)
     #print(base_url + pgno_ext + str(10*i))
     soup = BeautifulSoup(response.text, 'lxml')
     items = soup.find_all('div', class_="title")
@@ -59,7 +62,6 @@ with open(filename +'.csv',mode='w', newline='') as job_file:
         for h in heading:
             text = []
             company = h.find('h4', class_='jobsearch-CompanyReview--heading').text.strip('\n')
-            repeat_job = False
             for i in items:
                 tag = i.find_all('ul')
                 for i in tag:
@@ -70,7 +72,11 @@ with open(filename +'.csv',mode='w', newline='') as job_file:
         print_progress_bar(count+1,len(job_urls))
         count+=1
 
-            
+df = pd.read_csv(filename+'.csv', encoding='ISO-8859-1')
+
+df.to_csv(filename + '_cleaned.csv', index=False, header=True)
+
+
                     
 
         
