@@ -7,3 +7,5 @@ This is a web scraping program that scrapes the first 20 pages of the job advert
 # How it works
 
 The goal of this program is to scrape a large amount of job requirements/data from the [website](www.indeed.com), create a .csv file containing that data. I will then label the with the response `Applied` which indicates whether or not I would apply for the job. I will then use the labelled data as my training set for my predictive model and see how well my model can predict whether or not I would want to apply for the new, unseen jobs. To do this I will be using a RandomForestClassifier or a GBM, as well as stemming/lemmatizing and TF-IDF. 
+
+[samplecsv](https://github.com/SnowQuack/JobScrape-Predictor/sampletrain.png)
